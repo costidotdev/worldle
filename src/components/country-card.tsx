@@ -1,8 +1,8 @@
-import { Box, Divider, Flex, Text } from "@mantine/core";
-import { motion } from "framer-motion";
-import { convertDistance, getCompassDirection, getDistance } from "geolib";
-import { Country } from "../data/data";
-import CountUp from "react-countup";
+import { Box, Divider, Flex, Text } from '@mantine/core';
+import { motion } from 'framer-motion';
+import { convertDistance, getCompassDirection, getDistance } from 'geolib';
+import { Country } from '../data/data';
+import CountUp from 'react-countup';
 
 type TextWithAnimationProps = {
   children: React.ReactNode;
@@ -33,6 +33,25 @@ type CountryCardProps = {
   country: Country;
 };
 
+const directionMap = {
+  N: '⬆️',
+  NE: '↗️',
+  E: '➡️',
+  SE: '↘️',
+  S: '⬇️',
+  SW: '↙️',
+  W: '⬅️',
+  NW: '↖️',
+  NNE: '⬆️', // North-North-East
+  ENE: '➡️', // East-North-East
+  ESE: '↘️', // East-South-East
+  SSE: '⬇️', // South-South-East
+  SSW: '⬇️', // South-South-West
+  WSW: '⬅️', // West-South-West
+  WNW: '⬅️', // West-North-West
+  NNW: '⬆️', // North-North-West
+};
+
 export function CountryCard({ guessCountry, country }: CountryCardProps) {
   const guessCountryLatAndLong = {
     latitude: guessCountry.latitude,
@@ -46,7 +65,7 @@ export function CountryCard({ guessCountry, country }: CountryCardProps) {
 
   const distance = convertDistance(
     getDistance(guessCountryLatAndLong, countryLatAndLong),
-    "km"
+    'km'
   );
 
   const direction = getCompassDirection(
@@ -57,22 +76,28 @@ export function CountryCard({ guessCountry, country }: CountryCardProps) {
   const proximity = 100 - (distance / 20000) * 100;
 
   return (
-    <Flex justify={"space-between"} align={"center"} w={"100%"}>
+    <Flex justify={'space-between'} align={'center'} w={'100%'}>
       {guessCountry && (
         <>
-          <Box w={"35%"}>
+          <Box w={'35%'}>
             <AnimatedText text={guessCountry.name} />
           </Box>
           <Divider orientation="vertical" />
-          <Text w={"20%"}>
+          <Text w={'20%'}>
             <CountUp start={0} end={distance} duration={1} /> km
           </Text>
-          <Divider orientation="vertical" />{" "}
-          <Box w={"15%"}>
-            <AnimatedText text={guessCountry === country ? "🎉" : direction} />
+          <Divider orientation="vertical" />
+          <Box w={'15%'}>
+            <AnimatedText
+              text={
+                guessCountry === country
+                  ? '🎉'
+                  : directionMap[direction] || '🧭'
+              }
+            />
           </Box>
           <Divider orientation="vertical" />
-          <Text w={"15%"}>
+          <Text w={'15%'}>
             <CountUp start={0} end={Math.floor(proximity)} duration={1} /> %
           </Text>
         </>

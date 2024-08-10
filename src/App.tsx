@@ -7,54 +7,39 @@ import { CountryMap } from "./components/country-map";
 import { Navbar } from "./components/navbar";
 import { SelectCountry } from "./components/select-country";
 import { GameStatus, MAX_GUESSES } from "./constants";
-import { countries, Country } from "./data/data";
-import { checkAndResetLocalStorage } from "./helpers/checkAndResetLocalStorage";
-import { getCountryForToday } from "./helpers/getCountryForToday";
+import { countries, countriesMap } from "./data/data";
+import { getRandomCountry } from "./helpers/getRandomCountry";
 
 function App() {
-  const country: Country = getCountryForToday();
+  const storedCountryCode = localStorage.getItem("country");
+  const initialCountry = storedCountryCode ? countriesMap.get(storedCountryCode)! : getRandomCountry();
 
-  useEffect(() => {
-    checkAndResetLocalStorage();
-  }, []);
-
-  console.log(localStorage.getItem("guesses"));
   const [value, setValue] = useState<string>("");
   const [guesses, setGuesses] = useState<string[]>(
-    JSON.parse(
-      localStorage.getItem("guesses") ||
-        JSON.stringify(Array(MAX_GUESSES).fill(""))
-    )
+    JSON.parse(localStorage.getItem("guesses") || JSON.stringify(Array(MAX_GUESSES).fill("")))
   );
   const [guessCount, setGuessCount] = useState<number>(
     JSON.parse(localStorage.getItem("guessCount") || JSON.stringify(0))
   );
   const [gameStatus, setGameStatus] = useState<GameStatus>(
-    JSON.parse(
-      localStorage.getItem("gameStatus") || JSON.stringify(GameStatus.Playing)
-    )
+    JSON.parse(localStorage.getItem("gameStatus") || JSON.stringify(GameStatus.Playing))
   );
 
   useEffect(() => {
+    localStorage.setItem("country", initialCountry.code);
     localStorage.setItem("guesses", JSON.stringify(guesses));
     localStorage.setItem("guessCount", JSON.stringify(guessCount));
     localStorage.setItem("gameStatus", JSON.stringify(gameStatus));
-    console.log("Current guesses:", guesses);
-  }, [guesses, guessCount, gameStatus]);
-
-  // Conditionally return content based on guesses length
-  if (!guesses) {
-    return <h1>No guesses</h1>;
-  }
+  }, [guesses, guessCount, gameStatus, initialCountry?.code]);
 
   return (
     <Flex align="center" direction={"column"} gap={32}>
       <Navbar />
-      <CountryMap country={country} />
+      <CountryMap country={initialCountry} />
       {gameStatus === GameStatus.Playing && (
         <SelectCountry
           countries={countries}
-          country={country}
+          country={initialCountry}
           value={value}
           setValue={setValue}
           guesses={guesses}
@@ -66,15 +51,13 @@ function App() {
         />
       )}
       {gameStatus !== GameStatus.Playing && (
-        <CorrectCountry country={country} gameStatus={gameStatus} />
+        <CorrectCountry country={initialCountry} gameStatus={gameStatus} />
       )}
       <Flex direction={"column"} gap={8} w={"100%"} align={"center"}>
         {guesses.length === 0 && <h1>No guesses</h1>}
         {guesses.map((guess, index) => {
-          const guessCountry = countries.find(
-            (country) => country.name === guess
-          );
-          if (gameStatus === GameStatus.Won && index > guessCount) return null;
+          const guessCountry = countries.find((country) => country.name === guess);
+          if (gameStatus === GameStatus.Won && index >= guessCount) return null;
           return (
             <CardItem
               key={index}
@@ -82,7 +65,7 @@ function App() {
               guessCount={guessCount}
               guess={guess}
               guessCountry={guessCountry}
-              country={country}
+              country={initialCountry}
             />
           );
         })}

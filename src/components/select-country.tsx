@@ -1,11 +1,11 @@
-import { Autocomplete, Button, Flex } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { IconSearch } from "@tabler/icons-react";
-import { useCallback, useEffect, useRef } from "react";
-import ConfettiExplosion from "react-confetti-explosion";
-import { GameStatus, MAX_GUESSES } from "../constants";
-import { Country } from "../data/data";
-import useFocusOnKey from "../hooks/useFocusOnKey";
+import { Autocomplete, Button, Flex } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconSearch } from '@tabler/icons-react';
+import { useCallback, useEffect, useRef } from 'react';
+import ConfettiExplosion from 'react-confetti-explosion';
+import { GameStatus, MAX_GUESSES } from '../constants';
+import { Country } from '../data/data';
+import useFocusOnKey from '../hooks/useFocusOnKey';
 
 type SelectCountryProps = {
   countries: Country[];
@@ -38,25 +38,25 @@ export function SelectCountry({
   const handleCountrySubmit = useCallback(() => {
     if (!value) {
       notifications.show({
-        color: "red",
-        title: "No country selected",
-        message: "Please select a country",
+        color: 'red',
+        title: 'No country selected',
+        message: 'Please select a country',
       });
       return;
     }
     if (!countries.map((c) => c.name).includes(value)) {
       notifications.show({
-        color: "red",
-        title: "Country not found",
-        message: "Please select a valid country",
+        color: 'red',
+        title: 'Country not found',
+        message: 'Please select a valid country',
       });
       return;
     }
     if (guesses.includes(value)) {
       notifications.show({
-        color: "red",
-        title: "Already guessed",
-        message: "Please select a different country",
+        color: 'red',
+        title: 'Already guessed',
+        message: 'Please select a different country',
       });
       return;
     }
@@ -65,22 +65,23 @@ export function SelectCountry({
       newGuesses[guessCount] = value;
       setGuesses(newGuesses);
       setGuessCount(guessCount + 1);
-      setValue("");
+      setValue('');
     }
-    if (guessCount === MAX_GUESSES) {
+    // this is a guess so we need to add minus one
+    if (guessCount === MAX_GUESSES - 1) {
       setGameStatus(GameStatus.Lost);
       notifications.show({
-        color: "red",
-        message: "Game over, try again tomorrow!",
-        position: "top-center",
+        color: 'red',
+        message: 'Game over, try again tomorrow!',
+        position: 'top-center',
       });
     }
     if (country.name === value) {
       setGameStatus(GameStatus.Won);
       notifications.show({
-        color: "green",
-        message: "Nice job!",
-        position: "top-center",
+        color: 'green',
+        message: 'Nice job!',
+        position: 'top-center',
       });
     }
   }, [
@@ -98,7 +99,7 @@ export function SelectCountry({
   useEffect(() => {
     const autoComplete = autoCompleteRef.current;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
+      if (event.key === 'Enter') {
         event.preventDefault();
         if (countries.map((c) => c.name).includes(value)) {
           handleCountrySubmit();
@@ -106,13 +107,13 @@ export function SelectCountry({
       }
     };
 
-    autoComplete?.addEventListener("keydown", handleKeyDown);
+    autoComplete?.addEventListener('keydown', handleKeyDown);
     return () => {
-      autoComplete?.removeEventListener("keydown", handleKeyDown);
+      autoComplete?.removeEventListener('keydown', handleKeyDown);
     };
   }, [value, countries, autoCompleteRef, handleCountrySubmit]);
 
-  useFocusOnKey("/", autoCompleteRef);
+  useFocusOnKey('/', autoCompleteRef);
 
   function handleKeyboardOptionSubmit(newValue: string) {
     setValue(newValue);
@@ -123,10 +124,10 @@ export function SelectCountry({
       {gameStatus === GameStatus.Won && <ConfettiExplosion />}
       <Flex
         gap={16}
-        align={"center"}
-        justify={"center"}
-        direction={"row"}
-        w={"100%"}
+        align={'center'}
+        justify={'center'}
+        direction={'row'}
+        w={'100%'}
       >
         <Autocomplete
           data={countries.map((country) => country.name)}
@@ -139,7 +140,7 @@ export function SelectCountry({
           onChange={setValue}
           ref={autoCompleteRef}
           withScrollArea={false}
-          styles={{ dropdown: { maxHeight: 200, overflowY: "auto" } }}
+          styles={{ dropdown: { maxHeight: 200, overflowY: 'auto' } }}
           flex={2}
           inputSize="md"
           leftSection={<IconSearch size={18} />}
