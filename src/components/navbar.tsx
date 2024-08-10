@@ -18,7 +18,7 @@ export function Navbar() {
           size={"lg"}
           variant="default"
           onClick={() =>
-            window.open("https://github.com/abhisheksingh/worldle", "_blank")
+            window.open("https://github.com/costelnr1/worldle", "_blank")
           }
         >
           <IconBrandGithub stroke={1.5} />

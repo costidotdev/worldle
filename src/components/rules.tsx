@@ -1,27 +1,27 @@
-import { ActionIcon, Divider, Flex, Modal, Text } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconQuestionMark } from "@tabler/icons-react";
-import { countries } from "../data/data";
-import { ExampleCountryCard } from "./example-country-card";
-import { getDistance } from "geolib";
+import { ActionIcon, Anchor, Divider, Flex, Modal, Text } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IconQuestionMark } from '@tabler/icons-react';
+import { countries } from '../data/data';
+import { ExampleCountryCard } from './example-country-card';
+import { getCompassDirection, getDistance } from 'geolib';
+import { directionMap } from '../helpers/directionMap';
 
 export function Rules() {
   const [opened, { open, close }] = useDisclosure(false);
-
   return (
     <>
       <Modal
         opened={opened}
         onClose={close}
         title="How to play"
-        size={"lg"}
+        size={'lg'}
         styles={{
           title: {
             fontWeight: 500,
           },
         }}
       >
-        <Flex direction={"column"} gap={16}>
+        <Flex direction={'column'} gap={16}>
           <Text size="sm">
             Guess the <span>WORLDLE</span> in 6 guesses.
           </Text>
@@ -37,13 +37,13 @@ export function Rules() {
           <Text fw={500} size="sm">
             Examples:
           </Text>
-          <Flex direction={"column"} gap={24}>
+          <Flex direction={'column'} gap={24}>
             <ExampleCountryCard
               guessCountry={countries[2]}
               country={countries[0]}
             />
             <Text size="sm">
-              Your guess {countries[2].name} is{" "}
+              Your guess {countries[2].name} is{' '}
               {getDistance(
                 {
                   latitude: countries[2].latitude,
@@ -53,9 +53,23 @@ export function Rules() {
                   latitude: countries[0].latitude,
                   longitude: countries[0].longitude,
                 }
-              ).toFixed(2)}{" "}
+              ).toFixed(2)}{' '}
               km away from the target location, the target location is in the
-              East direction and you have 71% of proximity!
+              {
+                directionMap[
+                  getCompassDirection(
+                    {
+                      latitude: countries[2].latitude,
+                      longitude: countries[2].longitude,
+                    },
+                    {
+                      latitude: countries[0].latitude,
+                      longitude: countries[0].longitude,
+                    }
+                  )
+                ]
+              }{' '}
+              direction and you have 71% of proximity!
             </Text>
           </Flex>
 
@@ -75,8 +89,23 @@ export function Rules() {
                 latitude: countries[0].latitude,
                 longitude: countries[0].longitude,
               }
-            ).toFixed(2)}{" "}
-            km away, East and 92%!
+            ).toFixed(2)}{' '}
+            km away,{' '}
+            {
+              directionMap[
+                getCompassDirection(
+                  {
+                    latitude: countries[5].latitude,
+                    longitude: countries[5].longitude,
+                  },
+                  {
+                    latitude: countries[0].latitude,
+                    longitude: countries[0].longitude,
+                  }
+                )
+              ]
+            }{' '}
+            and 92%!
           </Text>
 
           <ExampleCountryCard
@@ -84,15 +113,26 @@ export function Rules() {
             country={countries[0]}
           />
           <Text size="sm">
-            Next guess,{" "}
+            Next guess,{' '}
             <Text span fw={500}>
               {countries[0].name}
             </Text>
             , it's the location to guess! Congrats! 🎉
           </Text>
+          <Text>
+            Inspired by{' '}
+            <Anchor href="https://www.nytimes.com/games/wordle/index.html">
+              Wordle{' '}
+            </Anchor>
+            and{' '}
+            <Anchor href="https://worldle.teuteuf.fr/">
+              {' '}
+              Worldle by Teuteuf
+            </Anchor>
+          </Text>
         </Flex>
       </Modal>
-      <ActionIcon onClick={open} size={"lg"} variant="default">
+      <ActionIcon onClick={open} size={'lg'} variant="default">
         <IconQuestionMark stroke={1.5} />
       </ActionIcon>
     </>

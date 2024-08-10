@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { convertDistance, getCompassDirection, getDistance } from 'geolib';
 import { Country } from '../data/data';
 import CountUp from 'react-countup';
+import { directionMap } from '../helpers/directionMap';
 
 type TextWithAnimationProps = {
   children: React.ReactNode;
@@ -31,25 +32,6 @@ const AnimatedText = ({ text }: AnimatedTextProps) => (
 type CountryCardProps = {
   guessCountry: Country;
   country: Country;
-};
-
-const directionMap = {
-  N: '⬆️',
-  NE: '↗️',
-  E: '➡️',
-  SE: '↘️',
-  S: '⬇️',
-  SW: '↙️',
-  W: '⬅️',
-  NW: '↖️',
-  NNE: '⬆️', // North-North-East
-  ENE: '➡️', // East-North-East
-  ESE: '↘️', // East-South-East
-  SSE: '⬇️', // South-South-East
-  SSW: '⬇️', // South-South-West
-  WSW: '⬅️', // West-South-West
-  WNW: '⬅️', // West-North-West
-  NNW: '⬆️', // North-North-West
 };
 
 export function CountryCard({ guessCountry, country }: CountryCardProps) {
