@@ -68,19 +68,20 @@ export function SelectCountry({
       setValue('');
     }
     // this is a guess so we need to add minus one
-    if (guessCount === MAX_GUESSES - 1) {
-      setGameStatus(GameStatus.Lost);
-      notifications.show({
-        color: 'red',
-        message: 'Game over, try again tomorrow!',
-        position: 'top-center',
-      });
-    }
     if (country.name === value) {
       setGameStatus(GameStatus.Won);
       notifications.show({
         color: 'green',
         message: 'Nice job!',
+        position: 'top-center',
+      });
+      return;
+    }
+    if (guessCount === MAX_GUESSES - 1) {
+      setGameStatus(GameStatus.Lost);
+      notifications.show({
+        color: 'red',
+        message: 'Game over, try again tomorrow!',
         position: 'top-center',
       });
     }
