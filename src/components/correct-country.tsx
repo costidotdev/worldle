@@ -1,6 +1,7 @@
 import { Badge, Button, Flex } from '@mantine/core';
 import { GameStatus } from '../constants';
 import { Country } from '../data/data';
+import { resetGame } from '../helpers/resetGame';
 
 type CorrectCountryProps = {
   country: Country;
@@ -8,13 +9,6 @@ type CorrectCountryProps = {
 };
 
 export function CorrectCountry({ country, gameStatus }: CorrectCountryProps) {
-  function handlePlayAgainClick(): void {
-    const theme = localStorage.getItem('mantine-color-scheme')!;
-    localStorage.clear();
-    localStorage.setItem('mantine-color-scheme', theme);
-    window.location.reload();
-  }
-
   return (
     <Flex direction={'column'} gap={16} align={'center'}>
       <Badge
@@ -52,7 +46,7 @@ export function CorrectCountry({ country, gameStatus }: CorrectCountryProps) {
         >
           Google Maps
         </Button>
-        <Button size="md" onClick={handlePlayAgainClick}>
+        <Button size="md" onClick={resetGame}>
           Play again
         </Button>
       </Flex>

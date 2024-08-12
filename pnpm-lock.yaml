@@ -44,6 +44,9 @@ dependencies:
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@22.1.0)(typescript@5.5.4)
+  worldle-mantine:
+    specifier: 'link:'
+    version: 'link:'
 
 devDependencies:
   '@types/jest':
